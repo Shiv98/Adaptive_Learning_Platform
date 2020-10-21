@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="column is-4 is-offset-4">
+    <h1 class="title" style="color:black;"><b>Navigus Assignment</b></h1>
+    <p class="subtitle" style="color:black;"><b>Submitted by</b> : Shivangi Gupta, DIT University</p>
+    <h3 class="title">Sign Up</h3>
+    <div class="box">
+        <form method="POST" action="{{ url_for('index')+'teacher'}}">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="username" name="username" id = "username" placeholder="Username" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="name" placeholder="Name" id = "name" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password" id = "password" placeholder="Password">
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth" onclick="validate()">Sign Up</button>
+        </form>
+    </div>
+
+    <h3 class="title">OR</h3>
+    <div class="box">
+        <a href = '/login'>
+            <button class="button is-block is-info is-large is-fullwidth">Login</button>
+        </a> 
+    </div>
+    
+</div>
+{% endblock %}

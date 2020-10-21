@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy 
 from flask_marshmallow import Marshmallow
 import os
@@ -34,19 +34,29 @@ class TeacherSchema(ma.Schema):
 t_schema = TeacherSchema()
 ts_schema = TeacherSchema(many=True)
 
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
 # Create a Teacher
 @app.route('/teacher', methods=['POST'])
 def add_teacher():
-    username = request.json['username']
-    name = request.json['name']
-    password = request.json['password']
 
-    new_teacher = Teacher(username, name, password)
+    usernamef = request.form.get('username')
+    namef = request.form.get('name')
+    passwordf = request.form.get('password')
+    
+    new_teacher = Teacher(usernamef, namef, passwordf)
 
     db.session.add(new_teacher)
     db.session.commit()
 
-    return t_schema.jsonify(new_teacher)
+    return render_template('login.html')
 
 # Get All Teachers
 @app.route('/teacher', methods=['GET'])
