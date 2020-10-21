@@ -1,4 +1,6 @@
 from flask import Flask, request, jsonify, render_template,redirect, url_for,flash
+from flask_login import UserMixin
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy 
 from flask_marshmallow import Marshmallow
 import os
@@ -40,9 +42,21 @@ ts_schema = TeacherSchema(many=True)
 def index():
     return render_template('index.html')
 
-@app.route('/login')
+@app.route('/login', methods=['GET','POST'])
 def login():
-    return render_template('login.html')
+    uname = request.form.get('uname')
+    password = request.form.get('password')
+
+    user = Teacher.query.filter_by(username=uname).first()
+
+    # check if the user actually exists
+    # take the user-supplied password, hash it, and compare it to the hashed password in the database
+    if not user or not check_password_hash(user.password, password):
+        flash('Please check your login details and try again.')
+        return render_template('login.html') # if the user doesn't exist or password is wrong, reload the page
+
+    # if the above check passes, then we know the user has the right credentials
+    return render_template('postlogin.html')
 
 # Create a Teacher
 @app.route('/teacher', methods=['POST'])
@@ -58,7 +72,7 @@ def add_teacher():
         flash('Email address already exists, Try with a different username or login!')
         return render_template('index.html')
     
-    new_teacher = Teacher(usernamef, namef, passwordf)
+    new_teacher = Teacher(usernamef, namef,generate_password_hash(passwordf, method='sha256'))
     db.session.add(new_teacher)
     db.session.commit()
 
