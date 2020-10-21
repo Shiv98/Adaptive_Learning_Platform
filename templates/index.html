@@ -7,6 +7,13 @@
     <p class="subtitle" style="color:black;"><b>Submitted by</b> : Shivangi Gupta, DIT University</p>
     <h3 class="title">Sign Up</h3>
     <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
         <form method="POST" action="{{ url_for('index')+'teacher'}}">
             <div class="field">
                 <div class="control">
