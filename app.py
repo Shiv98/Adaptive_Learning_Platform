@@ -107,14 +107,14 @@ def add_teacher():
 
     return redirect('/login')
 
-# Get All Teachers
+# Get All Teachers (For testing on Postaman)
 @app.route('/teacher', methods=['GET'])
 def get_teachers():
     all_teachers = Teacher.query.all()
     result = ts_schema.dump(all_teachers)
     return jsonify(result)
 
-# Get Single Teacher
+# Get Single Teacher (For testing on Postaman)
 @app.route('/teacher/<username>', methods=['GET'])
 def get_teacher(username):
     teacher = Teacher.query.get(username)
@@ -159,9 +159,31 @@ def addc():
 
     return redirect('/teacherdashboard')
 
-@app.route("/editcourse")
+@app.route("/editcourse",methods=['GET'])
 def editc():
     return render_template("editcourse.html")
+
+@app.route("/editcourse",methods=['POST'])
+def editcp():
+    cid = request.form.get('courseid')
+    ucname = request.form.get('coursename')
+    usem = request.form.get('semester')
+    ucredit = request.form.get('credit')
+
+    course = Course.query.filter_by(courseid=cid).first()
+
+    # check if the user actually exists
+    if not course:
+        flash('Please check your courseid and try again.')
+        return render_template('editcourse.html') # if the user doesn't exist or password is wrong, reload the page
+    else:
+        course = Course.query.get(cid)
+        course.coursename=ucname
+        course.semester=usem
+        course.credit = ucredit
+        db.session.commit()
+        return redirect('/teacherdashboard')
+
 
 @app.route("/delcourse")
 def delc():
@@ -170,6 +192,13 @@ def delc():
 @app.route("/viewcourse")
 def viewc():
     return render_template("viewcourse.html")
+
+#For testing on Postman
+@app.route('/vcourse', methods=['GET'])
+def get_courses():
+    all_cs = Course.query.all()
+    result = courses_schema.dump(all_cs)
+    return jsonify(result)
 
 #Quiz Portal Routes for Teacher
 
