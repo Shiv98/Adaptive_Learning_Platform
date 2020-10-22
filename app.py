@@ -208,9 +208,11 @@ def delcp():
         return redirect('/teacherdashboard')
 
 
-@app.route("/viewcourse")
+@app.route("/viewcourse", methods=['GET'])
 def viewc():
-    return render_template("viewcourse.html")
+    all_cs = Course.query.all()
+    result = courses_schema.dump(all_cs)
+    return render_template("viewcourse.html",value = result)
 
 #For testing on Postman
 @app.route('/vcourse', methods=['GET'])
