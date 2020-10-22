@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template,redirect, url_for,flash
+from flask import Flask, request, jsonify, render_template,redirect, url_for,flash,session
 from flask_login import login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy 
@@ -7,7 +7,7 @@ import os
 
 # Init app
 app = Flask(__name__)
-app.secret_key = "super secret key"
+app.secret_key = "shivanginavigus"
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')
@@ -85,7 +85,13 @@ def login():
         return redirect('/login') # if the user doesn't exist or password is wrong, reload the page
 
     # if the above check passes, then we know the user has the right credentials
+    session['username'] = uname
     return redirect('/teacherdashboard')
+
+@app.route('/logout')
+def logout():
+    session['username'] = None
+    return redirect('/')
 
 # Create a Teacher
 @app.route('/teacher', methods=['POST'])
@@ -129,16 +135,22 @@ def delete_teacher(username):
     db.session.commit()
     return t_schema.jsonify(teacher)
 
-
-
 #Dashboard Routes For Teacher
 @app.route("/teacherdashboard",methods=['GET'])
 def dashboard():
-    return render_template("t_dashboard.html")
+    uname = session['username']
+    if uname == None:
+        return redirect('/')
+    else:
+        return render_template("t_dashboard.html",name = uname)
 
 @app.route("/addcourse",methods=['GET'])
 def addourse():
-    return render_template("addcourse.html")
+    uname = session['username']
+    if uname == None:
+        return redirect('/')
+    else:
+        return render_template("addcourse.html")
 
 @app.route("/addcourse",methods=['POST'])
 def addc():
@@ -161,7 +173,11 @@ def addc():
 
 @app.route("/editcourse",methods=['GET'])
 def editc():
-    return render_template("editcourse.html")
+    uname = session['username']
+    if uname == None:
+        return redirect('/')
+    else:
+        return render_template("editcourse.html")
 
 @app.route("/editcourse",methods=['POST'])
 def editcp():
@@ -187,7 +203,11 @@ def editcp():
 
 @app.route("/delcourse",methods=['GET'])
 def delc():
-    return render_template("delcourse.html")
+    uname = session['username']
+    if uname == None:
+        return redirect('/')
+    else:
+        return render_template("delcourse.html")
 
 @app.route("/delcourse",methods=['POST'])
 def delcp():
@@ -210,24 +230,20 @@ def delcp():
 
 @app.route("/viewcourse", methods=['GET'])
 def viewc():
-    all_cs = Course.query.all()
-    result = courses_schema.dump(all_cs)
-    return render_template("viewcourse.html",value = result)
+    uname = session['username']
+    if uname == None:
+        return redirect('/')
+    else:
+        all_cs = Course.query.all()
+        result = courses_schema.dump(all_cs)
+        return render_template("viewcourse.html",value = result)
 
-#For testing on Postman
-@app.route('/vcourse', methods=['GET'])
-def get_courses():
-    all_cs = Course.query.all()
-    result = courses_schema.dump(all_cs)
-    return jsonify(result)
 
 #Quiz Portal Routes for Teacher
 
 @app.route("/quizdashboard")
 def quiz_dashboard():
     return render_template("quizdashboard.html")
-
-
 
 if __name__ == '__main__':
     app.run(debug= True)

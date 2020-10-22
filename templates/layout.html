@@ -11,7 +11,21 @@
 </head>
 
 <body>
-    <section class="hero is-primary is-fullheight">       
+    <section class="hero is-primary is-fullheight">      
+        <div class="hero-head">
+            <nav class="navbar">
+                <div class="container">
+                    <div id="navbarMenuHeroA" class="navbar-menu">
+                        <div class="navbar-end">
+                            <a href="/logout" class="navbar-item">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+ 
         <div class="hero-body">
             <div class="container has-text-centered">
                {% block content %}
