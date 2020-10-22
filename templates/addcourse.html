@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Add Course</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="courseid" id = "courseid" placeholder="Course Id" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="coursename" id = "coursename" placeholder="Course Name" autofocus="">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="Semester" id = "semester" placeholder="Semester">
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="credit" id = "credit" placeholder="Credit">
+                </div>
+            </div>
+
+            <button class="button is-block is-info is-large is-fullwidth" onclick="validate()">ADD</button>
+        </form>
+    </div>
+    <a href = '/teacherdashboard'>
+        <h1 style="color:black;"> Back to Dashboard</h1>
+    </a> 
+    
+</div>
+
+{% endblock %}
