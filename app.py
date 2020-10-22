@@ -68,7 +68,11 @@ courses_schema = CourseSchema(many=True)
 def index():
     return render_template('index.html')
 
-@app.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['GET'])
+def loginst():
+    return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
 def login():
     uname = request.form.get('uname')
     password = request.form.get('password')
@@ -78,7 +82,7 @@ def login():
     # check if the user actually exists
     if not user or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
-        return render_template('login.html') # if the user doesn't exist or password is wrong, reload the page
+        return redirect('/login') # if the user doesn't exist or password is wrong, reload the page
 
     # if the above check passes, then we know the user has the right credentials
     return redirect('/teacherdashboard')
@@ -128,14 +132,32 @@ def delete_teacher(username):
 
 
 #Dashboard Routes For Teacher
-
-@app.route("/teacherdashboard")
+@app.route("/teacherdashboard",methods=['GET'])
 def dashboard():
     return render_template("t_dashboard.html")
 
-@app.route("/addcourse")
-def addc():
+@app.route("/addcourse",methods=['GET'])
+def addourse():
     return render_template("addcourse.html")
+
+@app.route("/addcourse",methods=['POST'])
+def addc():
+    cid = request.form.get('courseid')
+    cname = request.form.get('coursename')
+    sem = request.form.get('semester')
+    credit = request.form.get('credit')
+
+    course = Course.query.filter_by(courseid=cid).first()  # if this returns a user, then the email already exists in database
+
+    if course: # if a user is found, we want to redirect back to signup page so user can try again
+        flash('Course already exists, Try again')
+        return render_template('addcourse.html')
+    
+    new_course = Course(cid, cname,sem,credit,0)
+    db.session.add(new_course)
+    db.session.commit()
+
+    return redirect('/teacherdashboard')
 
 @app.route("/editcourse")
 def editc():
