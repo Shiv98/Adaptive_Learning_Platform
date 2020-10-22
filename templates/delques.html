@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="column is-4 is-offset-4">
+    <h3 class="title">Delete Ques of Quiz</h3>
+    <div class="box">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="notification is-danger">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+        {% endwith %}
+        <form method="POST" action="{{ url_for('index')+'delcourse'}}">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="courseid" id = "courseid" placeholder="Course Id" autofocus="">
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="quesid" id = "quesid" placeholder="Ques Id" autofocus="">
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="courseidr" id = "courseidr" placeholder="Retype Course Id" autofocus="">
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="text" name="quesidr" id = "quesidr" placeholder="Retype Ques Id" autofocus="">
+                </div>
+            </div>
+            <button class="button is-block is-info is-large is-fullwidth" >Delete</button>
+        </form>
+    </div>
+    <a href = '/quizdashboard'>
+        <h1 style="color:black;"> Back to Quiz Dashboard</h1>
+    </a> 
+    
+</div>
+
+{% endblock %}
