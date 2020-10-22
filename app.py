@@ -174,7 +174,7 @@ def editcp():
 
     # check if the user actually exists
     if not course:
-        flash('Please check your courseid and try again.')
+        flash('Course not found! Try Again!')
         return render_template('editcourse.html') # if the user doesn't exist or password is wrong, reload the page
     else:
         course = Course.query.get(cid)
@@ -185,9 +185,28 @@ def editcp():
         return redirect('/teacherdashboard')
 
 
-@app.route("/delcourse")
+@app.route("/delcourse",methods=['GET'])
 def delc():
     return render_template("delcourse.html")
+
+@app.route("/delcourse",methods=['POST'])
+def delcp():
+    cid = request.form.get('courseid')
+    cidr =  request.form.get('courseidr')
+
+    if cid != cidr:
+        flash('Please confirm the Course Id correctly!')
+        return render_template('delcourse.html') 
+
+    course = Course.query.filter_by(courseid=cid).first()
+    if not course:
+        flash('Course not found! Try Again!')
+        return render_template('delcourse.html') # if the user doesn't exist or password is wrong, reload the page
+    else:
+        db.session.delete(course)
+        db.session.commit()
+        return redirect('/teacherdashboard')
+
 
 @app.route("/viewcourse")
 def viewc():
