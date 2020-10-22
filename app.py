@@ -241,9 +241,37 @@ def viewc():
 
 #Quiz Portal Routes for Teacher
 
-@app.route("/quizdashboard")
+@app.route("/quizdashboard",methods=['GET'])
 def quiz_dashboard():
-    return render_template("quizdashboard.html")
+    uname = session['username']
+    if uname == None:
+        return redirect('/')
+    else:
+        return render_template("quizdashboard.html")
+
+@app.route("/addques",methods=['GET'])
+def addques():
+    uname = session['username']
+    if uname == None:
+        return redirect('/')
+    else:
+        return render_template("addques.html")
+
+@app.route("/editques",methods=['GET'])
+def editques():
+    uname = session['username']
+    if uname == None:
+        return redirect('/')
+    else:
+        return render_template("editques.html")
+
+@app.route("/delques",methods=['GET'])
+def delques():
+    uname = session['username']
+    if uname == None:
+        return redirect('/')
+    else:
+        return render_template("delques.html")
 
 if __name__ == '__main__':
     app.run(debug= True)
