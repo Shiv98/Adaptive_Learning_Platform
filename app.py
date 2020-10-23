@@ -351,8 +351,6 @@ def editquesp():
         db.session.commit()
         return redirect('/quizdashboard')
 
-
-
 @app.route("/delques",methods=['GET'])
 def delques():
     uname = session['username']
@@ -360,6 +358,24 @@ def delques():
         return redirect('/')
     else:
         return render_template("delques.html")
+
+@app.route("/delques",methods=['POST'])
+def delquesp():
+    cid = request.form.get('courseid')
+    qid = request.form.get('quesid')
+
+    ques = Question.query.filter_by(cid=cid, qid = qid).first() # ques for specicif course
+
+    if not ques:
+        flash('Quesid for this Course does not exist, Try again')
+        return render_template('delques.html')
+
+    else:
+        db.session.delete(ques)
+        db.session.commit()
+        return redirect('/quizdashboard')
+
+
 
 if __name__ == '__main__':
     app.run(debug= True)
