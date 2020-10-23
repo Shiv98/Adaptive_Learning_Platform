@@ -299,7 +299,7 @@ def addquesp():
     marks = request.form.get('marks')
 
     course = Course.query.filter_by(courseid=cid).first()  # if this returns a user, then the course already exists in database
-    ques = Question.query.filter_by(cid=cid, qid = qid).first() # 
+    ques = Question.query.filter_by(cid=cid, qid = qid).first() # ques for specicif course
 
     if not course: # if course is not found
         flash('Course does not exist, Try again')
@@ -322,6 +322,36 @@ def editques():
         return redirect('/')
     else:
         return render_template("editques.html")
+
+@app.route("/editques",methods=['POST'])
+def editquesp():
+    cid = request.form.get('courseid')
+    qid = request.form.get('quesid')
+    uques = request.form.get('ques')
+    uop1 = request.form.get('op1')
+    uop2 = request.form.get('op2')
+    uop3 = request.form.get('op3')
+    uans = request.form.get('ans')
+    umarks = request.form.get('marks')
+
+    ques = Question.query.filter_by(cid=cid, qid = qid).first()
+
+    if not ques:
+        flash('Quesid for this Course does not exist, Try again')
+        return render_template('editques.html')
+
+    else:
+        question = Question.query.get(cid,qid)
+        question.ques=uques
+        question.op1=uop1
+        question.op2 = uop2
+        question.op3 = uop3
+        question.ans = uans
+        question.marks = umarks
+        db.session.commit()
+        return redirect('/quizdashboard')
+
+
 
 @app.route("/delques",methods=['GET'])
 def delques():
