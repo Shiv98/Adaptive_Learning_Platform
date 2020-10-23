@@ -189,7 +189,7 @@ def addc():
     sem = request.form.get('semester')
     credit = request.form.get('credit')
 
-    course = Course.query.filter_by(courseid=cid).first()  # if this returns a user, then the email already exists in database
+    course = Course.query.filter_by(courseid=cid).first()  # if this returns a user, then the course already exists in database
 
     if course: # if a user is found, we want to redirect back to signup page so user can try again
         flash('Course already exists, Try again')
@@ -286,6 +286,34 @@ def addques():
         return redirect('/')
     else:
         return render_template("addques.html")
+
+@app.route("/addques",methods= ['POST'])
+def addquesp():
+    cid = request.form.get('courseid')
+    qid = request.form.get('quesid')
+    ques = request.form.get('ques')
+    op1 = request.form.get('op1')
+    op2 = request.form.get('op2')
+    op3 = request.form.get('op3')
+    ans = request.form.get('ans')
+    marks = request.form.get('marks')
+
+    course = Course.query.filter_by(courseid=cid).first()  # if this returns a user, then the course already exists in database
+    ques = Question.query.filter_by(cid=cid, qid = qid).first() # 
+
+    if not course: # if course is not found
+        flash('Course does not exist, Try again')
+        return render_template('addques.html')
+
+    if ques:
+        flash('Quesid for this Course already exist, Try again')
+        return render_template('addques.html')
+        
+    else:
+        new_ques = Question(cid, qid,ques,op1,op2,op3,ans,marks)
+        db.session.add(new_ques)
+        db.session.commit()
+        return redirect('/quizdashboard')
 
 @app.route("/editques",methods=['GET'])
 def editques():
