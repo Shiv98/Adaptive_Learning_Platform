@@ -61,6 +61,36 @@ class CourseSchema(ma.Schema):
 course_schema = CourseSchema()
 courses_schema = CourseSchema(many=True)
 
+#Question Class/Model
+class Question(db.Model):
+    cid = db.Column(db.String(100))
+    qid = db.Column(db.String(100),primary_key=True)
+    ques = db.Column(db.String(300))
+    op1 = db.Column(db.String(100))
+    op2 = db.Column(db.String(100))
+    op3 = db.Column(db.String(100))
+    ans = db.Column(db.String(100))
+    marks = db.Column(db.String(100))
+
+    def __init__(self,cid,qid,ques,op1,op2,op3,ans,marks):
+        self.cid = cid
+        self.qid = qid
+        self.ques=ques
+        self.op1=op1
+        self.op2=op2
+        self.op3=op3
+        self.ans = ans
+        self.marks = marks
+
+# Teacher Schema
+class QuestionSchema(ma.Schema):
+  class Meta:
+    fields = ('cid', 'qid', 'ques','op1','op2','op3','ans','marks')
+
+# init Schema
+q_schema = QuestionSchema()
+qs_schema = QuestionSchema(many=True)
+
 
 #Authtication routes
 
